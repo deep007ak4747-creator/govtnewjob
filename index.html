@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GovtNewJob</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {font-family: Arial; margin:0; background:#f4f4f4;}
+        header {background:#0d47a1; color:white; padding:15px; text-align:center;}
+        nav {background:#333; padding:10px; text-align:center;}
+        nav a {color:white; margin:10px; text-decoration:none;}
+        section {padding:20px;}
+        .job-box {background:white; padding:10px; margin:10px 0; border-radius:5px;}
+        button {padding:6px 12px; background:green; color:white; border:none;}
+        input {padding:6px; margin:5px 0; width:100%;}
+        #adminPanel {display:none; background:#fff; padding:15px; margin-top:20px;}
+        footer {background:#0d47a1; color:white; text-align:center; padding:10px;}
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GovtNewJob</h1>
+    <p>Latest Government Job Updates</p>
+</header>
+
+<nav>
+    <a href="#">Home</a>
+    <a href="#apply">Apply</a>
+    <a href="#admin">Admin</a>
+</nav>
+
+<section>
+
+<h2>Search Jobs</h2>
+<input type="text" id="search" placeholder="Search job..." onkeyup="searchJob()">
+
+<div id="jobList"></div>
+
+<h2 id="apply">Online Apply Form</h2>
+<input type="text" placeholder="Full Name">
+<input type="email" placeholder="Email">
+<input type="text" placeholder="Qualification">
+<button onclick="alert('Application Submitted Successfully!')">Submit</button>
+
+<div id="adminPanel">
+    <h2>Admin Panel</h2>
+    <input type="text" id="jobTitle" placeholder="Job Title">
+    <input type="text" id="jobLocation" placeholder="Location">
+    <button onclick="addJob()">Add Job</button>
+</div>
+
+<h2 id="admin">Admin Login</h2>
+<input type="password" id="adminPass" placeholder="Enter Admin Password">
+<button onclick="checkAdmin()">Login</button>
+
+</section>
+
+<footer>
+<p>© 2026 GovtNewJob | All Rights Reserved</p>
+</footer>
+
+<script>
+let jobs = JSON.parse(localStorage.getItem("jobs")) || [
+    {title:"JKSSB Recruitment", location:"Jammu & Kashmir"},
+    {title:"Police Constable Vacancy", location:"J&K"}
+];
+
+function displayJobs() {
+    let jobList = document.getElementById("jobList");
+    jobList.innerHTML = "";
+    jobs.forEach((job, index) => {
+        jobList.innerHTML += `
+        <div class="job-box">
+            <h3>${job.title}</h3>
+            <p>Location: ${job.location}</p>
+        </div>`;
+    });
+}
+
+function addJob() {
+    let title = document.getElementById("jobTitle").value;
+    let location = document.getElementById("jobLocation").value;
+    if(title && location){
+        jobs.push({title, location});
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        displayJobs();
+        alert("Job Added Successfully");
+    }
+}
+
+function searchJob(){
+    let value = document.getElementById("search").value.toLowerCase();
+    let filtered = jobs.filter(job => job.title.toLowerCase().includes(value));
+    let jobList = document.getElementById("jobList");
+    jobList.innerHTML = "";
+    filtered.forEach(job=>{
+        jobList.innerHTML += `
+        <div class="job-box">
+            <h3>${job.title}</h3>
+            <p>Location: ${job.location}</p>
+        </div>`;
+    });
+}
+
+function checkAdmin(){
+    let pass = document.getElementById("adminPass").value;
+    if(pass === "admin123"){
+        document.getElementById("adminPanel").style.display="block";
+        alert("Admin Login Successful");
+    } else {
+        alert("Wrong Password");
+    }
+}
+
+displayJobs();
+</script>
+
+</body>
+</html>
